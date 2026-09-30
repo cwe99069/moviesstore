@@ -1,0 +1,65 @@
+:root{
+    --gt-navy: #051E39;
+    --gt-gold: #B39051;
+    --gt-gold_dark: #8F713D;
+    --gt-navy-medium: #003D69;
+}
+
+
+.bg-index {
+    background: url("/static/img/background.jpg") no-repeat
+        fixed;
+    background-size: 100% auto;
+}
+
+.navbar a.nav-link {
+    color: #FFFEF6 !important;
+}
+
+.bg-dark {
+    background-color: #051E39 !important;
+}
+
+.ms-footer {
+    background-color: #031424;
+    bottom:0;
+}
+
+.ms-footer p {
+    color: #7F7F7F;
+    font-size: 13px;
+}
+
+.ms-footer a:hover {
+    color: #B39051;
+    text-decoration: none;
+}
+
+.ms-footer-bottom span{
+    font-size: 13px;
+    line-height: 38px;
+}
+
+.ms-footer-bottom a {
+    color: #B39051;
+    text-decoration: none;
+}
+
+.ms-footer-bottom a:hover {
+    color: #fff;
+}
+
+.img-card-200 {
+    width: fit-content;
+    max-height: 200px;
+}
+
+.img-card-400 {
+    width: fit-content;
+    max-height: 400px;
+}
+
+#footer {
+    display:flex;
+    flex-direction:column;
+}
