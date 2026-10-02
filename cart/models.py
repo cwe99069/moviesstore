@@ -5,6 +5,7 @@ from movies.models import Movie
 class Order(models.Model):
     id = models.AutoField(primary_key=True)
     total = models.IntegerField()
+    item_num = models.IntegerField()
     date = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     def __str__(self):
