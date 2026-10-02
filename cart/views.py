@@ -5,6 +5,9 @@ from .models import Order, Item
 from django.contrib.auth.decorators import login_required
 from .utils import calculate_cart_total
 # Create your views here.
+
+
+
 def add(request, id):
     get_object_or_404(Movie, id=id)
     cart = request.session.get('cart', {})

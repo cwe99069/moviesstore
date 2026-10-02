@@ -1,0 +1,14 @@
+{% extends 'admin/index.html' %}
+{% block content %}
+<div id="content-main">
+    {{ block.super }}
+    <div class="module">
+        <h2>User Summary</h2>
+        <p>
+            <a href="{% url 'admin:cart_order_user_most_purchases' %}">
+                See User Summary
+            </a>
+        </p>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,26 @@
+{% extends 'admin/base_site.html' %}
+{% load static %}
+
+
+{% block content %}
+<div class="dashboard-stats">
+    <div class="stat-card">
+        <h2>User Summary</h2>
+        <span class="stat-text">User: {{ user }}</span>
+    </div>
+    <br />
+    <div class="stat-card">
+        <h2>User Orders</h2>
+        {% for order in user_orders %}
+        <h4>Id: {{ order.id }}</h4>
+        <h4>Cost: ${{ order.total }}</h4>
+        <h5>Purchase Date: {{ order.date }}</h5>
+        {% endfor %}
+    </div>
+    <br />
+    <div class="stat-card">
+        <h2>Total Movies Purchased</h2>
+        <span class="stat-number">{{ movies_purchased }}</span>
+    </div>
+</div>
+{% endblock %}
