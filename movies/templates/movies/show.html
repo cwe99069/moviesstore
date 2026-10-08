@@ -4,15 +4,21 @@
 <div class="p-3">
     <div class="container">
         <div class="row mt-3">
-            <div class="col-md-6 mx-auto mb-3">
+            <div class="col-md-6 mb-3 text-center">
+                <img src="{{ template_data.movie.image.url }}"
+                     class="rounded img-card-400" alt="img" />
+            </div>
+            <div class="col-md-6 mb-3">
                 <h2>{{ template_data.movie.name }}</h2>
+                
                 <hr />
                 <p><b>Description:</b> {{template_data.movie.description }}
                 </p>
-                <p><b>Price:</b>${{template_data.movie.price}}</p>
+                <p><b>Price:</b>${{template_data.movie.price}}</p>  
+                <p><b>Rating: </b>{{template_data.avg_rating}} / 5</p>
                 <p class="card-text">
-                    <form method="post"
-                          action="{% url 'cart.add' id=template_data.movie.id %}">
+                    <form method="post" action="{% url 'cart.add' id=template_data.movie.id %}">
+            
                         <div class="row">
                             {% csrf_token %}
                             <div class="col-auto">
@@ -23,15 +29,67 @@
                                            class="form-control quantity-input"
                                            name="quantity" value="1">
                                 </div>
+                                                          
+                            <span style="display: inline-block; width: 30px;"></span>
+
+                        </div>
+                    
+                                
+                        
                             </div>
                             <div class="col-auto">
                                 <button class="btn bg-dark text-white"
                                         type="submit">
                                     Add to Cart
                                 </button>
+                                
                             </div>
                         </div>
                     </form>
+                      <!--
+                            Source - https://stackoverflow.com/a/40799151
+                            Posted by Gerrit0
+                            Retrieved 2026-10-07, License - CC BY-SA 3.0
+                            -->
+                            <span style="display: inline-block; width: 30px;"></span>
+                            <div class="rating">
+                            <form method="POST" action="{% url 'movies.star_review' id=template_data.movie.id %}">
+                           {% csrf_token %}
+                            
+                            <input type="hidden" name="rating[post_id]" value="3">
+                            
+                            
+                            <button type="submit" name="rating[rating]" value="5" {% if template_data.user_star and template_data.user_star.value >= 5 %} style = "color: rgb(255, 215, 0)"  {% endif %}>&#9733; </button>
+                            <button type="submit" name="rating[rating]" value="4" {% if template_data.user_star and template_data.user_star.value >= 4 %} style = "color: rgb(255, 215, 0)"  {% endif %}>&#9733;</button>
+                            <button type="submit" name="rating[rating]" value="3" {% if template_data.user_star and template_data.user_star.value >= 3 %} style = "color: rgb(255, 215, 0)"  {% endif %}>&#9733;</button>
+                            <button type="submit" name="rating[rating]" value="2" {% if template_data.user_star and template_data.user_star.value >= 2 %} style = "color: rgb(255, 215, 0)"  {% endif %}>&#9733;</button>
+                            <button type="submit" name="rating[rating]" value="1" {% if template_data.user_star and template_data.user_star.value >= 1 %} style = "color: rgb(255, 215, 0)"  {% endif %}>&#9733;</button>
+                            </form>
+                           
+                            
+                            <style>
+                                form {
+                                    width: 130px;
+                                }
+
+                            button {
+                                border: 0;
+                                background: transparent;
+                                font-size: 1.5em;
+                                margin: 0;
+                                padding: 0;
+                                float: right;
+                                }
+
+                            button:hover,
+                            button:hover + button,
+                            button:hover + button + button,
+                            button:hover + button + button + button,
+                            button:hover + button + button + button + button {
+                            color: rgb(255, 189, 8);
+                            }
+                            </style>
+                            </div>
                 </p>
                 <h2>Reviews</h2>
                 <hr />
@@ -86,6 +144,7 @@
                                                     class="btn bg-dark text-white">
                                                 Add Review
                                             </button>
+                                             
                                         </div>
                                     </form>
                                 </div>
@@ -95,10 +154,7 @@
                 </div>
                 {% endif %}
             </div>
-            <div class="col-md-6 mx-auto mb-3 text-center">
-                <img src="{{ template_data.movie.image.url }}"
-                     class="rounded img-card-400" alt="img" />
-            </div>
+            
         </div>
     </div>
 </div>
