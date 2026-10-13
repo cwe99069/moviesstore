@@ -1,0 +1,19 @@
+{% extends 'admin/base_site.html' %}
+{% load static %}
+
+
+{% block content %}
+<div class="dashboard-stats">
+    <div class="stat-card">
+        <h2>Most Purchased Movie</h2>
+        <h4>Name: {{ mostPurchased.name }}</h4>
+        <h4>Times Purchased: {{ mostPurchased.num_purchased }}</h4>
+    </div>
+    <br />
+    <div class="stat-card">
+        <h2>Most Reviewed Movie</h2>
+        <h4>Name: {{ mostReviewed.name }}</h4>
+        <h4>Times Reviewed: {{ mostReviewed.num_reviewed }}</h4>
+    </div>
+</div>
+{% endblock %}
