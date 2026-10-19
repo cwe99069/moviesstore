@@ -15,5 +15,11 @@
         <h4>Name: {{ mostReviewed.name }}</h4>
         <h4>Times Reviewed: {{ mostReviewed.num_reviewed }}</h4>
     </div>
+    <br />
+    <div class="stat-card">
+        <h2>User With the Most Comments</h2>
+        <h4>Name: {{ topCommenter.username }}</h4>
+        <h4>Comments Posted: {{ topCommenter.numComments }}</h4>
+    </div>
 </div>
 {% endblock %}
