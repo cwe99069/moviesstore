@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.contrib.auth.models import User 
 from django.db.models import Count, Sum
 from .models import Movie, Review
 from django.urls import path
@@ -31,12 +32,16 @@ class MovieAdmin(admin.ModelAdmin):
         ).order_by('-num_reviewed')
 
         mostReviewed = movies.first()
+        topCommenter = User.objects.annotate(
+            numComments = Count("review")
+        ).order_by('-numComments').first()
         
         template_data = {
             **self.admin_site.each_context(request),
             'title': 'Movie with Most Purchases + Reviews',
             'mostPurchased': mostPurchased,
             'mostReviewed': mostReviewed,
+            'topCommenter': topCommenter,
         }
         return TemplateResponse(
             request,
