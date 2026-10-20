@@ -53,6 +53,7 @@
                             -->
                             <span style="display: inline-block; width: 30px;"></span>
                             <div class="rating">
+                            {% if user.is_authenticated %}
                             <form method="POST" action="{% url 'movies.star_review' id=template_data.movie.id %}">
                            {% csrf_token %}
                             
@@ -65,6 +66,7 @@
                             <button type="submit" name="rating[rating]" value="2" {% if template_data.user_star and template_data.user_star.value >= 2 %} style = "color: rgb(255, 215, 0)"  {% endif %}>&#9733;</button>
                             <button type="submit" name="rating[rating]" value="1" {% if template_data.user_star and template_data.user_star.value >= 1 %} style = "color: rgb(255, 215, 0)"  {% endif %}>&#9733;</button>
                             </form>
+                            {% endif %}
                            
                             
                             <style>

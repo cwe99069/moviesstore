@@ -36,7 +36,11 @@ def index(request):
 def show(request, id):
     movie = Movie.objects.get(id=id)
     reviews = Review.objects.filter(movie=movie)
-    user_star = Star.objects.filter(movie=movie, user= request.user).first()
+    if request.user.is_authenticated:
+        user_star = Star.objects.filter(movie=movie, user= request.user).first()
+    else:
+        user_star = None
+
     avg_rating = Star.objects.filter(movie=movie).aggregate(Avg('value'))['value__avg']
 
     if avg_rating is not None:
