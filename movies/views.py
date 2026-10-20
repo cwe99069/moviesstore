@@ -3,7 +3,22 @@ from django.db.models import Avg
 from .models import Movie, Review, Star
 from django.contrib.auth.decorators import login_required
 from report.views import repreview
+from django.http import JsonResponse
+from django.db.models import Sum
+from cart.models import Item
 # Create your views here.
+
+REGIONS = {
+    'Pacific Northwest': [45.5, -122.0],
+    'California': [36.8, -119.4],
+    'Mountain West': [40.0, -111.0],
+    'Southwest': [33.5, -111.5],
+    'South Central': [32.5, -97.0],
+    'Midwest': [41.5, -89.0],
+    'Southeast': [33.0, -84.0],
+    'Northeast': [42.5, -72.5],
+    'Mid-Atlantic': [39.5, -77.0],
+}
 
 def index(request):
     search_term = request.GET.get('search')
@@ -92,4 +107,34 @@ def star_review(request, id):
             )
     return redirect('movies.show', id=id)
 
+@login_required
+def popularity_map(request):
+    template_data = {}
+    template_data['title'] = 'Local Popularity Map'
+    return render(request, 'movies/popularity_map.html', {'template_data': template_data})
+
+@login_required
+def popularity_map_data(request):
+    rows = (Item.objects.exclude(order__region='').values('order__region', 'movie__name').annotate(count=Sum('quantity')).order_by('-count'))
+
+    regions = {}
+    for r in rows:
+        name = r['order__region']
+        if name not in REGIONS:
+            continue
+        region = regions.setdefault(name, {
+            'name': name,
+            'lat': REGIONS[name][0],
+            'lng': REGIONS[name][1],
+            'top_movies': []
+        })
+        region['top_movies'].append({
+            'title': r['movie__name'],
+            'count': r['count']
+        })
+
+    for region in regions.values():
+        region['top_movies'] = region['top_movies'][:5]
+            
     
+    return JsonResponse({'regions': list(regions.values())})   

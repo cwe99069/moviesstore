@@ -7,6 +7,7 @@ class Order(models.Model):
     total = models.IntegerField()
     item_num = models.IntegerField()
     date = models.DateTimeField(auto_now_add=True)
+    region = models.CharField(max_length=50, blank=True, default='')
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     def __str__(self):
         return str(self.id) + ' - ' + self.user.username

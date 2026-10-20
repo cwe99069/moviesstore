@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% block content %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"
+    crossorigin="anonymous">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/MarkerCluster.css" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/MarkerCluster.Default.css" crossorigin="anonymous">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/leaflet.markercluster.js" crossorigin="anonymous"></script>
+<div class="p-3">
+    <div class="container">
+        <h2>{{ template_data.title }}</h2>
+        <hr />
+        <div class="d-flex flex-wrap align-items-center gap-3 mb-3">
+            <p id="applicant-summary" class="text-muted"></p>
+        </div>
+
+        <div id="applicant-map" style="height: 550px; width: 100%; border-radius: 8px;"></div>
+        <div id="region-details" class="mt-3 p-3 border rounded">
+            Select a region on the map to see its top movies.
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var map = L.map('applicant-map').setView([39.8283, -98.5795], 4);
+        L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', {
+            attribution: 'Tiles &copy; Esri &mdash; Source: Esri, Delorme, NAVTEQ, USGS, Intermap, iPC, NRCAN, Esri Japan, METI, Esri China (Hong Kong), Esri (Thailand), TomTom, 2012',
+            maxZoom: 18
+        }).addTo(map);
+
+        var clusterGroup = L.markerClusterGroup();
+        map.addLayer(clusterGroup);
+        var summaryEl = document.getElementById('applicant-summary');
+
+        function escapeHtml(text) {
+            var div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function showRegion(r) {
+            var html = '<h5>' + escapeHtml(r.name) + '</h5><ol>';
+                r.top_movies.forEach(function (m) {
+                    html += '<li>' + escapeHtml(m.title) + ' &mdash; ' + m.count + ' purchased</li>';
+                });
+                document.getElementById('region-details').innerHTML = html + '</ol>';
+        }
+
+        function loadApplicants() {
+            var url = "{% url 'movies.popularity_map_data' %}";
+            fetch(url)
+                .then(function (response) { return response.json(); })
+                .then(function (data) {
+                    clusterGroup.clearLayers();
+                    var bounds = [];
+                    data.regions.forEach(function (r) {
+                        var popup = '<strong>' + escapeHtml(r.name) + '</strong><br>' + r.top_movies.length + ' trending movies';
+                        var marker = L.marker([r.lat, r.lng]).bindPopup(popup);
+                        marker.on('click', function () { showRegion(r); });
+                        clusterGroup.addLayer(marker);
+                        bounds.push([r.lat, r.lng]);
+                    });
+                    if (bounds.length > 0) {
+                        map.fitBounds(bounds, { padding: [30, 30] });
+                    }
+                    summaryEl.textContent = data.regions.length + ' regions with purchases. Click a marker to see its top movies.';
+                });
+        }
+        loadApplicants();
+    });
+</script>
+{% endblock content %}
