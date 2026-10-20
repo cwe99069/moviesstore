@@ -38,9 +38,17 @@
                     ${{ template_data.cart_total }}
                 </a>
                 {% if template_data.movies_in_cart|length > 0 %}
-                <a href="{% url 'cart.purchase' %}" class="btn bg-dark text-white mb-2">
-                    Purchase
-                </a>
+                <form method="GET" action="{% url 'cart.purchase' %}" class="d-inline-flex gap-2 align-items-center">
+                    <select name="region" class="form-select w-auto" required>
+                        <option value="">Select Region</option>
+                        {% for r in template_data.regions %}
+                        <option value="{{ r }}">{{ r }}</option>
+                        {% endfor %}
+                    </select>
+                    <button type="submit"="btn bg-dark text-white ">
+                        Purchase
+                    </button>
+                </form>
                 <a href="{% url 'cart.clear' %}">
                     <button class="btn btn-danger mb-2">
                         Remove all movies from Cart

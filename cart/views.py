@@ -4,6 +4,7 @@ from movies.models import Movie
 from .models import Order, Item
 from django.contrib.auth.decorators import login_required
 from .utils import calculate_cart_total
+from movies.views import REGIONS
 # Create your views here.
 
 
@@ -28,6 +29,7 @@ def index(request):
     template_data['title'] = 'Cart'
     template_data['movies_in_cart'] = movies_in_cart
     template_data['cart_total'] = cart_total
+    template_data['regions'] = list(REGIONS)
     return render(request, 'cart/index.html',
         {'template_data': template_data})
 
@@ -55,6 +57,7 @@ def purchase(request):
     order.user = request.user
     order.total = cart_total
     order.item_num = len(movies_in_cart)
+    order.region = request.GET.get('region', '')
     order.save()
     for movie in movies_in_cart:
         item = Item()
